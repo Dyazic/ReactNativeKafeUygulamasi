@@ -59,7 +59,9 @@ export default function ProductDetail() {
         <TouchableOpacity style={styles.button} onPress={remoweCount}>
           <Text style={{ color: "#ffffff" }}>-</Text>
         </TouchableOpacity>
+        
         <Text>Adet: {count}</Text>
+        
         <TouchableOpacity style={styles.button} onPress={addCount}>
           <Text style={{ color: "#ffffff" }}>+</Text>
         </TouchableOpacity>
@@ -68,6 +70,7 @@ export default function ProductDetail() {
         <TouchableOpacity style={styles.button} onPress={() => { navigation.navigate("HomeScreen") }}>
           <Text style={{ color: "#ffffff" }}>Ana Menü</Text>
         </TouchableOpacity>
+        
         <TouchableOpacity style={styles.button} onPress={() => {
           navigation.navigate("CartSc", { id: list[0]["ID_URUN"], piece: count, price: list[0]["FIYAT"] });
         }}>
@@ -116,5 +119,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#5D4037",
     alignItems: "center",
     borderRadius: 20,
-  }
+    margin:12,
+  },
+ 
 });
