@@ -9,7 +9,9 @@ export default function ProductDetail() {
   const [list, setList] = useState([]);
   const baseUrl = 'http://www.kursadozdemir.com';
   const [count, setCount] = useState(0);
-
+  const userId = route.params.tuserId;
+  const userName = route.params.tuserName;
+  const pId = route.params.pid;
   useEffect(() => {
     const getData = async () => {
       try {
@@ -30,6 +32,18 @@ export default function ProductDetail() {
   if (count < 0) {
     setCount(0);
   }
+  const addCart = async () => {
+    try {
+      const response = await axios.post(`${baseUrl}/Sepet/Ekle`, { "ID_URUN": route.params.pid, "ID_KULLANICI": userId, "MIKTAR": count });
+      // Ekleme işlemi başarılı olduğunda yapılması gereken işlemler...
+      navigation.navigate("CartScreen",{ tuserId:userId,tuserName:userName })
+      console.log("count",count);
+    } catch (error) {
+      console.log(error);
+
+    }
+  }
+
 
   return (
     <SafeAreaView style={styles.container}>
@@ -38,18 +52,18 @@ export default function ProductDetail() {
           <FlatList
             data={list}
             renderItem={({ item }) => (
-            
-                <View style={styles.itemContainer}>
-                  <View>
-                    <Image source={{ uri: item["GORSEL_URL"] }} style={styles.itemImage} />
-                  </View>
-                  <View style={{ flexDirection: 'column', paddingLeft: 20 }}>
-                    <Text style={styles.itemText}>Ürün Adı: {item["ADI"]}</Text>
-                    <Text style={styles.itemText}>Açıklama: {item["ACIKLAMA"]}</Text>
-                    <Text style={styles.itemText}>Fiyat: {item["FIYAT"]}</Text>
-                  </View>
+
+              <View style={styles.itemContainer}>
+                <View>
+                  <Image source={{ uri: item["GORSEL_URL"] }} style={styles.itemImage} />
                 </View>
-          
+                <View style={{ flexDirection: 'column', paddingLeft: 20 }}>
+                  <Text style={styles.itemText}>Ürün Adı: {item["ADI"]}</Text>
+                  <Text style={styles.itemText}>Açıklama: {item["ACIKLAMA"]}</Text>
+                  <Text style={styles.itemText}>Fiyat: {item["FIYAT"]}</Text>
+                </View>
+              </View>
+
             )}
             ItemSeparatorComponent={() => <View style={styles.separator} />}
           />
@@ -59,21 +73,24 @@ export default function ProductDetail() {
         <TouchableOpacity style={styles.button} onPress={remoweCount}>
           <Text style={{ color: "#ffffff" }}>-</Text>
         </TouchableOpacity>
-        
+
         <Text>Adet: {count}</Text>
-        
+
         <TouchableOpacity style={styles.button} onPress={addCount}>
           <Text style={{ color: "#ffffff" }}>+</Text>
         </TouchableOpacity>
       </View>
-      <View style={{ flex: 0.2, flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}>
-        <TouchableOpacity style={styles.button} onPress={() => { navigation.navigate("HomeScreen") }}>
+      <View style={{ flex: 0.2, flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center',margin:10 }}>
+        <TouchableOpacity style={styles.button} onPress={() => { navigation.navigate("MenuScreen",{ tuserId:userId,tuserName:userName }) }}>
+          <Image style={styles.stretch} source={require("../Assets/menu.png")} />
           <Text style={{ color: "#ffffff" }}>Ana Menü</Text>
         </TouchableOpacity>
-        
+
         <TouchableOpacity style={styles.button} onPress={() => {
-          navigation.navigate("CartSc", { id: list[0]["ID_URUN"], piece: count, price: list[0]["FIYAT"] });
+          addCart();
+
         }}>
+          <Image style={styles.stretch} source={require("../Assets/addcart.png")} />
           <Text style={{ color: "#ffffff" }}>Sepete Ekle</Text>
         </TouchableOpacity>
       </View>
@@ -90,7 +107,7 @@ const styles = StyleSheet.create({
   },
   itemContainer: {
     padding: 20,
-    height: 300,
+    height: 200,
     flex: 0.80,
     flexDirection: "row",
     justifyContent: 'space-around',
@@ -106,8 +123,8 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
   },
   itemImage: {
-    width: 70,
-    height: 70,
+    width: 100,
+    height: 100,
     borderRadius: 20,
     resizeMode: 'cover',
   },
@@ -115,11 +132,16 @@ const styles = StyleSheet.create({
     height: 5,
   },
   button: {
-    padding: 20,
+    padding: 15,
     backgroundColor: "#5D4037",
     alignItems: "center",
     borderRadius: 20,
-    margin:12,
+    margin: 12,
   },
- 
+  stretch: {
+    width: 40,
+    height: 40,
+    resizeMode: 'stretch',
+  },
+
 });

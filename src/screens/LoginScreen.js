@@ -1,61 +1,65 @@
-import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, SafeAreaView, TouchableOpacity, TextInput, ToastAndroid, Keyboard } from "react-native";
+import React, { useState } from 'react';
+import { Text, View, StyleSheet, SafeAreaView, TouchableOpacity, ToastAndroid } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import axios from "axios";
 
-export default function ProductDetail() {
-  const navigation = useNavigation();
-  const baseUrl = 'http://www.kursadozdemir.com';
-  const [name, setName] = useState('');
-  const [surname, setSurName] = useState('');
-  const [message, setMessage] = useState('');
-  useEffect(() => {
-    setName('');
-    setSurName('');
-  }, []);
-
-
-  const addUser = async () => {
-    try {
-      await axios.post(`${baseUrl}/Test/Ekle`, { "AD": name, "SOYAD": surname });
-      setMessage("Kullanıcı Eklendi");
-    } catch (error) {
-      console.log(error);
-      setMessage(error);
-    }
-  }
-
+export default function LoginScreen() {
+  
+   const navigation=useNavigation();
+  const[userId,setUserId]=useState(0);
+  const[userName,setUserName]=useState('');
   const showToast = () => {
-    ToastAndroid.show(message, ToastAndroid.SHORT);
+    ToastAndroid.show(userId+"."+userName+" Giriş Yapıyor", ToastAndroid.SHORT);
   };
-
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={{ flex: 1, alignItems: 'center' }}>
-        <TextInput
-          style={styles.input}
-          onChangeText={setName}
-          value={name}
-        />
-        <TextInput
-          style={styles.input}
-          onChangeText={setSurName}
-          value={surname}
-        />
-        <View style={{ alignItems: 'center', justifyContent: 'space-around', flexDirection: 'row' }}>
-          <TouchableOpacity style={styles.button} onPress={()=>{
-            addUser(),
-                showToast()
+         <View style={styles.textbg}>
+         <Text style={{ color: "#000" }}>Kullanıcı Listesi</Text>
+         </View>
+         <TouchableOpacity style={styles.button} onPress={()=>{
+           setUserId(1);
+           setUserName("Beyza");
+          
+        }}>
+        <Text style={{ color: "#ffffff" }}>1. Beyza</Text>
+      </TouchableOpacity>
+         <TouchableOpacity style={styles.button} onPress={()=>{
+            setUserId(2);
+            setUserName("Denizhan");
+            
             }}>
-            <Text style={{ color: "#ffffff" }}>Kullanıcı Kaydet</Text>
+            <Text style={{ color: "#ffffff" }}>2. Denizhan</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={() => {
-            navigation.navigate("HomeScreen");
-          }}>
-            <Text style={{ color: "#ffffff" }}>Kaydetmeden Giriş</Text>
-          </TouchableOpacity>
-        </View>
+          <TouchableOpacity style={styles.button} onPress={()=>{
+           setUserId(3);
+           setUserName("Emre");
+           
+        }}>
+        <Text style={{ color: "#ffffff" }}>3.Emre</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.button} onPress={()=>{
+           setUserId(4);
+           setUserName("Furkan");
+           
+        }}>
+        <Text style={{ color: "#ffffff" }}>4.Furkan</Text>
+      </TouchableOpacity>
+       <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}>
+         <TouchableOpacity style={styles.button} onPress={()=>{
+            if(userId==0){
+                ToastAndroid.show("Lütfen Kullanıcı Seçin", ToastAndroid.SHORT);
+            }else{
+           showToast();
+           navigation.navigate("HomeScreen", { tuserId:userId,tuserName:userName });
+        }
+        }}>
+        <Text style={{ color: "#ffffff" }}>Giriş Yap</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.button} onPress={()=>{
+           navigation.navigate("SignInScreen");
+        }}>
+        <Text style={{ color: "#ffffff" }}>Kullanıcı Ekle</Text>
+      </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
@@ -66,18 +70,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#D7CCC8",
     alignItems: 'center',
-    paddingTop: 10,
+   // paddingTop: 10,
   },
-  itemContainer: {
-    padding: 20,
-    height: 300,
-    flex: 0.80,
-    flexDirection: "row",
-    justifyContent: 'space-around',
-    backgroundColor: "#5D4037",
-    alignItems: "center",
-    borderRadius: 20,
-  },
+  
   itemText: {
     paddingHorizontal: 20,
     fontSize: 20,
@@ -85,28 +80,21 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     fontStyle: 'italic',
   },
-  itemImage: {
-    width: 70,
-    height: 70,
-    borderRadius: 20,
-    resizeMode: 'cover',
-  },
-  separator: {
-    height: 5,
-  },
+  
   button: {
-    padding: 20,
+    padding: 15,
     backgroundColor: "#5D4037",
     alignItems: "center",
     borderRadius: 20,
     margin: 12,
   },
-  input: {
-    height: 60,
-    width: 200,
-    margin: 12,
-    borderWidth: 1,
-    padding: 10,
+  textbg:{
+    padding: 15,
+    borderWidth:1,
+    borderColor: "#5D4037",
+    alignItems: "center",
     borderRadius: 20,
-  },
+    margin: 12,
+  }
+  
 });

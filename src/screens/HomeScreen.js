@@ -1,45 +1,43 @@
-import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, SafeAreaView, FlatList, Image, TouchableOpacity } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import axios from "axios";
+import React, { useState } from 'react';
+import { Text, View, StyleSheet, SafeAreaView, TouchableOpacity, Image } from "react-native";
+import { useNavigation ,useRoute} from "@react-navigation/native";
 
 export default function HomeScreen() {
-  const navigation = useNavigation();
-
-  const [list, setList] = useState([]);
-  const baseUrl = 'http://www.kursadozdemir.com';
-
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        const response = await axios.post(`${baseUrl}/Kategori/Listele`, {});
-        setList(response.data.NESNE);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    getData();
-  }, []);
+   const navigation=useNavigation();
+   const route=useRoute();
+  const userId=route.params.tuserId;
+  const userName=route.params.tuserName;
+  
 
   return (
     <SafeAreaView style={styles.container}>
-      {list.length > 0 ?
-        <FlatList
-
-          data={list}
-
-          renderItem={({ item }) => (
-            <TouchableOpacity style={styles.itemContainer} onPress={() => {navigation.navigate("ProductSc",{catId:item["ID_KATEGORI"]}) }}>
-             
-                <Image source={{ uri: item["GORSEL_URL"] }} style={styles.itemImage} />
-                <Text style={styles.itemText}>    {item["ADI"]}</Text>
-             
-            </TouchableOpacity>
-          )}
-          ItemSeparatorComponent={() => <View style={styles.separator} />}
-        />
-        : null}
+         <View style={styles.textbg}>
+         
+         
+         </View>
+         <TouchableOpacity style={styles.button} onPress={()=>{
+           navigation.navigate("MenuScreen", { tuserId:userId,tuserName:userName })
+          
+        }}>
+        <Text style={{ color: "#ffffff" }}>Menüler</Text>
+        <Image style={styles.stretch} source={require("../Assets/menu.png")} />
+      </TouchableOpacity>
+         <TouchableOpacity style={styles.button} onPress={()=>{
+           navigation.navigate("CartScreen", { tuserId:userId,tuserName:userName })
+            
+            }}>
+            <Text style={{ color: "#ffffff" }}>Sepetim</Text>
+            <Image style={styles.stretch} source={require("../Assets/cart.png")} />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={()=>{
+        navigation.navigate("OrderScreen", { tuserId:userId,tuserName:userName })
+           
+        }}>
+        <Text style={{ color: "#ffffff" }}>Siparişlerim</Text>
+        <Image style={styles.stretch} source={require("../Assets/order.png")} />
+      </TouchableOpacity>
+      
+       
     </SafeAreaView>
   );
 }
@@ -49,32 +47,36 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#D7CCC8",
     alignItems: 'center',
-    paddingTop: 10,
+   // paddingTop: 10,
   },
-  itemContainer: {
-    padding: 20,
-    height: 100,
-    flex: 0.80,
-    flexDirection: "row",
-    justifyContent: 'space-around',
-    backgroundColor: "#5D4037",
-    alignItems: "center",
-    borderRadius: 20,
-  },
+  
   itemText: {
-    paddingHorizontal: 5,
+    paddingHorizontal: 20,
     fontSize: 20,
     marginBottom: 10,
     color: "#FFFFFF",
     fontStyle: 'italic',
   },
-  itemImage: {
-    width: 70,
-    height: 70,
+  
+  button: {
+    padding: 15,
+    backgroundColor: "#5D4037",
+    alignItems: "center",
     borderRadius: 20,
-    resizeMode: 'cover',
+    margin: 5,
   },
-  separator: {
-    height: 5,
+  textbg:{
+    padding: 15,
+    
+    borderColor: "#5D4037",
+    alignItems: "center",
+    borderRadius: 20,
+    margin: 12,
   },
+  stretch: {
+    width: 100,
+    height: 100,
+     resizeMode: 'stretch',
+  },
+  
 });
